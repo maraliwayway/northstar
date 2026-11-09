@@ -1,0 +1,22 @@
+# Render Blueprint for the Rails API. Database: paste a Postgres URL
+# (e.g. from Neon) into DATABASE_URL when Render asks for it.
+services:
+  - type: web
+    name: northstar-api
+    runtime: ruby
+    rootDir: backend
+    plan: free
+    buildCommand: bundle install && bin/rails db:prepare
+    startCommand: bundle exec puma -C config/puma.rb
+    healthCheckPath: /up
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: SECRET_KEY_BASE
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false
+      - key: FRONTEND_ORIGINS
+        sync: false
+      - key: SEED_DEMO
+        value: "0"
